@@ -31,12 +31,16 @@ class QA_Dataset(Dataset):
             # Convert answer's start/end positions in paragraph_text to start/end positions in tokenized_paragraph
             answer_start_token = tokenized_paragraph.char_to_token(question["answer_start"])
             answer_end_token = tokenized_paragraph.char_to_token(question["answer_end"])
-
+            #print("retrieved answer_start_token: {}, answer_end_token: {}".format(answer_start_token, answer_end_token))
             # A single window is obtained by slicing the portion of paragraph containing the answer
             mid = (answer_start_token + answer_end_token) // 2
+            #print("mid = (answer_start_token + answer_end_token) // 2; mid = {}".format(mid))
+            #print("Calculating paragraph_start. max_paragraph_len = {}, len of tokenized_paragraph = {}, max_paragraph_len = {}".format(self.max_paragraph_len, len(tokenized_paragraph), self.max_paragraph_len))
             paragraph_start = max(0, min(mid - self.max_paragraph_len // 2,
                                          len(tokenized_paragraph) - self.max_paragraph_len))
+            #print("Got paragraph_start: {}".format())
             paragraph_end = paragraph_start + self.max_paragraph_len
+
 
             # Slice question/paragraph and add special tokens (101: CLS, 102: SEP)
             input_ids_question = [101] + tokenized_question.ids[:self.max_question_len] + [102]
