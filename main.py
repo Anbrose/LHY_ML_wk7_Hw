@@ -7,6 +7,8 @@ import json
 import numpy as np
 import random
 import torch
+import math
+import time
 from accelerate import Accelerator
 from torch.utils.data import DataLoader, Dataset
 from transformers import AdamW, BertForQuestionAnswering, BertTokenizerFast
@@ -101,11 +103,11 @@ if __name__ == '__main__':
     dev_loader = DataLoader(dev_set, batch_size=1, shuffle=False, pin_memory=True)
     test_loader = DataLoader(test_set, batch_size=1, shuffle=False, pin_memory=True)
 
-    num_epoch = 20
+    num_epoch = 6
     validation = True
     logging_step = 100
-    learning_rate = 1e-4
-    optimizer = AdamW(model.parameters(), lr=learning_rate)
+    origin_learning_rate = 1e-4
+    optimizer = AdamW(model.parameters(), lr=origin_learning_rate)
 
     if fp16_training:
         model, optimizer, train_loader = accelerator.prepare(model, optimizer, train_loader)
@@ -145,11 +147,13 @@ if __name__ == '__main__':
             step += 1
 
             ##### TODO: Apply linear learning rate decay #####
+            learning_rate = origin_learning_rate / math.sqrt(epoch + 1)
+            optimizer = AdamW(model.parameters(), lr=learning_rate)
 
             # Print training loss and accuracy over past logging step
             if step % logging_step == 0:
                 print(
-                    f"Epoch {epoch + 1} | Step {step} | loss = {train_loss.item() / logging_step:.3f}, acc = {train_acc / logging_step:.3f}")
+                    f"Epoch {epoch + 1} | Step {step} | loss = {train_loss.item() / logging_step:.3f}, acc = {train_acc / logging_step:.3f} on time {time.asctime(time.localtime(time.time()))}")
                 train_loss = train_acc = 0
 
         if validation:
