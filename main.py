@@ -101,7 +101,7 @@ if __name__ == '__main__':
     dev_loader = DataLoader(dev_set, batch_size=1, shuffle=False, pin_memory=True)
     test_loader = DataLoader(test_set, batch_size=1, shuffle=False, pin_memory=True)
 
-    num_epoch = 1
+    num_epoch = 6
     validation = True
     logging_step = 100
     learning_rate = 1e-4
