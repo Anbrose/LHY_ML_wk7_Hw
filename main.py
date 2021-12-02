@@ -124,17 +124,6 @@ if __name__ == '__main__':
 
             # Model inputs: input_ids, token_type_ids, attention_mask, start_positions, end_positions (Note: only "input_ids" is mandatory)
             # Model outputs: start_logits, end_logits, loss (return when start_positions/end_positions are provided)
-            print("-" * 80)
-            print("input_id : {}".format(data[0][0]))
-            print("-" * 80)
-            print("token_type_ids : {}".format(data[1][0]))
-            print("-" * 80)
-            print("input_id : {}".format(data[2][0]))
-            print("-" * 80)
-            print("input_id : {}".format(data[3][0]))
-            print("-" * 80)
-            print("input_id : {}".format(data[4][0]))
-            print("-" * 80)
             output = model(input_ids=data[0], token_type_ids=data[1], attention_mask=data[2], start_positions=data[3],
                            end_positions=data[4])
 
